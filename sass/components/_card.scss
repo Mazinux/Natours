@@ -182,8 +182,12 @@
     font-weight: 100;
   }
 
-
-  @include respond(tab-port) {
+  /* we want a media query for smaller screens or when hovering is not an option,
+    like for on tablets and phones. because we have to add this second condition
+    to the query, we can not just use the tab-port query that we defined
+    in the _mixins and we have to write a specific query for this: */
+  @media only screen and (max-width: 56.25em),
+          only screen and (hover: none) {
       height: auto;
       border-radius: $border-radius;
       background-color: $color-white;
