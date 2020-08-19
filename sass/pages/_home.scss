@@ -9,8 +9,8 @@
   margin-top: -20vh;
 
   //getting rid of too much padding on smaller devices:
-  @include respond(tab-port) {
-    padding: 20rem 0;
+  @include respond(tab-land) {
+    padding: 25rem 0;
   }
 }
 
