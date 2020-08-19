@@ -1,0 +1,1148 @@
+/*
+
+0 - 600px:      Phone
+600 - 900px:    Tablet portrait
+900 - 1200px:   Tablet landscape
+[1200 - 1800] is where our normal styles apply (in desktop first approach).
+1800px + :      Big desktop
+
+for a media query, we use EMS instead of pixels!
+
+1em = 16px, so:
+600px  =   37.5em
+900px  =   56.25em
+1200px =   75em
+1800px =   112.5
+
+$breakpoint argument choises:
+- phone
+- tab-port
+- tab-land
+- big-desktop
+
+order in which media queries should be written:
+1. base + typography
+2. general layout (header,nav,footer) + grid
+3. page layout
+4. components
+
+*/
+/*----------- CSS ANIMATIONS ------------------------------------------*/
+/*Main text (= 'OUTDOORS') coming in from left to the right*/
+@keyframes move_in_left {
+  0% {
+    opacity: 0;
+    /* we want to make the text come in from left to right, so it needs to
+        kind of slide over the X axis: */
+    transform: translateX(-10rem);
+    /*negative value means it comes
+                                    from the left*/ }
+  /*make it go a bit too far to the right, so it looks like it bounces back:*/
+  80% {
+    transform: translateX(1rem); }
+  100% {
+    opacity: 1;
+    transform: translate(0);
+    /*this is the position at which the text should
+                            be at when the animation ends. Thus the position
+                            which we coded for '.text_box' */ } }
+
+/* sub text (='is where life happens') coming in from below*/
+@keyframes move_in_right {
+  0% {
+    opacity: 0;
+    transform: translateX(10rem); }
+  80% {
+    transform: translateX(-1rem); }
+  100% {
+    opacity: 1;
+    transform: translateX(0); } }
+
+/*moving in the btn from the bottom up: */
+@keyframes move_in_bottom {
+  0% {
+    opacity: 0;
+    transform: translateY(20rem); }
+  80% { }
+  100% {
+    opacity: 1;
+    transform: translateY(0); } }
+
+/*start off with a universal reset. '*' stands for 'all elements': */
+*,
+*::after,
+*::before {
+  margin: 0;
+  padding: 0;
+  box-sizing: inherit; }
+
+/* defining what 1rem is: */
+/*because the font-size is set to 62.5% (=10px in 16px
+                standard browser), 3rem is 30px. using REM instead of PX is
+                important: rem makes the website more responsive
+                because it just multiplies the browser setting for pixels
+                (usually 16px) or your own specification, so you
+                are always working with percentages instead of set
+                pixel values that are unresponsive. */
+/*@include respond(phone) {
+  font-size: 50%;
+} we are not using this one! because this query actually asks if the
+  screen is smaller than 600px to also apply font-size: 50%; */
+html {
+  font-size: 62.5%; }
+  @media (max-width: 75em) {
+    html {
+      font-size: 56.25%; } }
+  @media (max-width: 56.25em) {
+    html {
+      font-size: 50%; } }
+  @media (min-width: 112.5em) {
+    html {
+      font-size: 75%; } }
+
+body {
+  box-sizing: border-box;
+  padding: 3rem; }
+  @media (max-width: 56.25em) {
+    body {
+      padding: 0; } }
+
+body {
+  font-family: "Lato", sans-serif;
+  font-weight: 400;
+  /*font-size: 16px;*/
+  line-height: 1.7;
+  color: #777; }
+
+.heading_primary {
+  color: #ffffff;
+  text-transform: uppercase;
+  /*to make sure there is no 'shaking' after animation. no one really
+    knows why this shaking happens, or why this fix apparently works*/
+  backface-visibility: hidden;
+  margin-bottom: 6rem; }
+  .heading_primary--main {
+    display: block;
+    font-size: 6rem;
+    font-weight: 400;
+    letter-spacing: 3.5rem;
+    animation-name: move_in_left;
+    animation-duration: 1s;
+    /*delay before animation start to play after page load: */
+    animation-delay: 0.2s;
+    /*specifying the speed curve of the animation: */
+    animation-timing-function: ease-out; }
+    @media (max-width: 37.5em) {
+      .heading_primary--main {
+        letter-spacing: 1rem;
+        font-size: 5rem; } }
+  .heading_primary--sub {
+    display: block;
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: 1.75rem;
+    /*animation-name: move_in_below;
+    animation-duration: 1s;
+    animation-delay: 0.2s;
+    animation-timing-function: ease-out;*/
+    animation: move_in_right 1s ease-out; }
+    @media (max-width: 37.5em) {
+      .heading_primary--sub {
+        letter-spacing: .5rem; } }
+
+.heading_secondary {
+  font-size: 3.5rem;
+  text-transform: uppercase;
+  font-weight: 700;
+  background-image: linear-gradient(to right, #7ed56f, #28b485);
+  display: inline-block;
+  -webkit-background-clip: text;
+  color: transparent; }
+  @media (max-width: 56.25em) {
+    .heading_secondary {
+      font-size: 3rem; } }
+  @media (max-width: 37.5em) {
+    .heading_secondary {
+      font-size: 2.5rem; } }
+  .heading_secondary:hover {
+    letter-spacing: .1rem;
+    transform: scale(1.05);
+    text-shadow: 0.5rem 1rem 2rem rgba(0, 0, 0, 0.2); }
+
+.heading_tertiary {
+  font-size: 1.6rem;
+  font-weight: 700;
+  text-transform: uppercase; }
+
+.paragraph {
+  font-size: 1.6rem; }
+  .paragraph:not(:last-child) {
+    margin-bottom: 3rem; }
+
+.u-center-text {
+  text-align: center !important; }
+
+.u-margin-bottom-small {
+  margin-bottom: 1.5rem !important; }
+
+.u-margin-bottom-medium {
+  margin-bottom: 4rem !important; }
+
+.u-margin-bottom-big {
+  margin-bottom: 8rem !important; }
+
+.u-margin-top-big {
+  margin-top: 8rem !important; }
+
+.u-margin-top-huge {
+  margin-top: 10rem !important; }
+
+.bg-video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: -1;
+  opacity: .25; }
+  .bg-video__content {
+    height: 100%;
+    width: 100%;
+    /*sadly, specifying height and width alone doesn't fix the problem,
+      and the video still doesn't cover the whole area. therefor we need
+      to use object-fit:  */
+    object-fit: cover; }
+
+/* making the DISCOVER OUT TOURS button using pseudo elements
+    and pseudo classes:
+    pseudo classes are special states of a selector. in this example
+    the link is the state of the btn selector. we use these classes
+    to style element under a certain condition.*/
+.btn {
+  /*o apply styles to ALL buttons, so not just the ones that were written
+  in html with an anker element (defined in here with link and visited),
+  we just add "&" in here, meaning: aplly to all buttons: */
+  /*we want the button to move up just a little when being hovered over*/
+  /*and we want the button to look as if you push down on it a little when
+    you click it: */
+  /*specific styling of only the white button (the btn class we
+    are using for other buttons as well)*/
+  /* GREEN BUTTON*/
+  /*creating a button that looks exactly like the button we already have,
+    but it's behind the button. it expands and then disappears behind the
+    first button again.*/
+  /*'discover our tours'-btn animation:*/ }
+  .btn, .btn:link, .btn:visited {
+    text-transform: uppercase;
+    text-decoration: none;
+    font-size: 2rem;
+    padding: 1.5rem 4rem;
+    display: inline-block;
+    /*rounded corners for button*/
+    border-radius: 10rem;
+    transition: all .2s;
+    position: relative;
+    border: none;
+    cursor: pointer; }
+  .btn:hover {
+    transform: translateY(-0.3rem);
+    box-shadow: 0 2rem 3rem rgba(0, 0, 0, 0.2);
+    /*this means: no shadow on x-axis
+                                10px shadow on y-axis
+                                10px blur
+                                color: black, with only .2 opacity */
+    /*now let's make it so the ::after is applied when hovered over btn: */ }
+    .btn:hover::after {
+      transform: scaleX(1.4) scaleY(1.6);
+      /*enlarges the after btn */
+      opacity: 0; }
+  .btn:focus, .btn:active {
+    outline: none;
+    transform: translateY(0.3rem);
+    box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.2); }
+  .btn--white {
+    background-color: #ffffff;
+    color: #777; }
+    .btn--white::after {
+      background-color: #ffffff; }
+  .btn--green {
+    background-color: #55c57a;
+    color: #ffffff; }
+    .btn--green::after {
+      background-color: #55c57a; }
+  .btn::after {
+    content: "";
+    display: inline-block;
+    height: 100%;
+    /*(=100% of the first button)*/
+    width: 100%;
+    border-radius: 10rem;
+    /*to put it in place and behind the fist button: */
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    /*so behind the other one*/
+    transition: all .4s; }
+  .btn--animated {
+    animation: move_in_bottom .5s ease-out;
+    animation-delay: .75s;
+    animation-fill-mode: backwards;
+    /*to make the 0% animations start
+                                      BEFORE the actual animation starts*/ }
+
+.btn-text:link, .btn-text:visited {
+  font-size: 1.6rem;
+  color: #55c57a;
+  display: inline-block;
+  text-decoration: none;
+  border-bottom: 0.1rem solid #55c57a;
+  padding: .3rem; }
+
+.btn-text:hover {
+  background-color: #55c57a;
+  color: #ffffff;
+  transform: translateY(-0.3rem);
+  box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.2); }
+
+.btn-text:active {
+  transform: translateY(0rem);
+  box-shadow: 0 0.1rem 1rem rgba(0, 0, 0, 0.15); }
+
+.card {
+  perspective: 150rem;
+  /*the lower this number, the more it 'jumps out'
+                        of the screen*/
+  -moz-perspective: 150rem;
+  /*to make sure the perspective works, you need to define the height of the
+    card in here, and then also for the __side. otherwise it won't work. */
+  height: 52rem;
+  position: relative; }
+  .card__side {
+    height: 52rem;
+    transition: all .8s ease;
+    /* we want the front side and back side on top of each other. let's do this
+      by positioning them:  */
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    /*to not make the image 'overflow' the card when we later add the background
+    image to the front. otherwise the rounded corners addes by border-radius
+    would no longer be visible: */
+    overflow: hidden;
+    border-radius: 3px;
+    box-shadow: 0 1.5rem 4rem rgba(0, 0, 0, 0.15); }
+    .card__side--front {
+      background-color: #ffffff; }
+    .card__side--back {
+      transform: rotateY(180deg); }
+      .card__side--back-1 {
+        background-image: linear-gradient(to right bottom, #ffb900, #ff7730); }
+      .card__side--back-2 {
+        background-image: linear-gradient(to right bottom, #7ed56f, #28b485); }
+      .card__side--back-3 {
+        background-image: linear-gradient(to right bottom, #2998ff, #5643fa); }
+  .card:hover .card__side--front {
+    transform: rotateY(-180deg); }
+  .card:hover .card__side--back {
+    transform: rotateY(0); }
+  .card__picture {
+    background-size: cover;
+    height: 23rem;
+    background-blend-mode: screen;
+    -webkit-clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+    clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%); }
+    .card__picture--1 {
+      background-image: linear-gradient(to right bottom, #ffb900, #ff7730), url(../img/nat-5.jpg); }
+    .card__picture--2 {
+      background-image: linear-gradient(to right bottom, #7ed56f, #28b485), url(../img/nat-6.jpg); }
+    .card__picture--3 {
+      background-image: linear-gradient(to right bottom, #2998ff, #5643fa), url(../img/nat-7.jpg); }
+  .card__heading {
+    font-size: 2.8rem;
+    font-weight: 300;
+    text-transform: uppercase;
+    text-align: right;
+    color: #ffffff;
+    position: absolute;
+    top: 12rem;
+    right: 2rem;
+    width: 75%; }
+  .card__heading-span {
+    padding: 1rem 1.5rem;
+    /*to split up the heading in two different 'boxes' with their own padding,
+    instead of one 'box' with one padding: */
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone; }
+    .card__heading-span--1 {
+      background-image: linear-gradient(to right bottom, rgba(255, 185, 0, 0.85), rgba(255, 119, 48, 0.85)); }
+    .card__heading-span--2 {
+      background-image: linear-gradient(to right bottom, rgba(126, 213, 111, 0.85), rgba(40, 180, 133, 0.85)); }
+    .card__heading-span--3 {
+      background-image: linear-gradient(to right bottom, rgba(41, 152, 255, 0.85), rgba(86, 67, 250, 0.85)); }
+  .card__details {
+    padding: 3rem; }
+    .card__details ul {
+      list-style: none;
+      width: 80%;
+      margin: 0 auto; }
+      .card__details ul li {
+        text-align: center;
+        font-size: 1.5rem;
+        padding: 1rem; }
+        .card__details ul li:not(:last-child) {
+          border-bottom: 1px solid #eee; }
+  .card__cta {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    text-align: center; }
+  .card__price-box {
+    margin-bottom: 8rem;
+    color: #ffffff; }
+  .card__price--only {
+    font-size: 1.4rem;
+    text-transform: uppercase; }
+  .card__price--value {
+    font-size: 6rem;
+    font-weight: 100; }
+  @media (max-width: 56.25em) {
+    .card {
+      height: auto;
+      border-radius: 3px;
+      background-color: #ffffff;
+      box-shadow: 0 1.5rem 4rem rgba(0, 0, 0, 0.15); }
+      .card__side {
+        height: auto;
+        position: relative;
+        box-shadow: none; }
+        .card__side--back {
+          transform: rotateY(0);
+          clip-path: polygon(0 15%, 100% 0, 100% 100%, 0 100%); }
+      .card:hover .card__side--front {
+        transform: rotateY(0); }
+      .card__details {
+        padding: 1rem 3rem; }
+      .card__cta {
+        transform: translate(0);
+        position: relative;
+        top: 0;
+        left: 0;
+        width: 100%;
+        padding: 7rem 4rem 4rem 4rem; }
+      .card__price-box {
+        margin-bottom: 3rem; }
+      .card__price--value {
+        font-size: 5rem; } }
+
+.composition {
+  position: relative;
+  /*to shrink the pictures that are not being hovered over.
+  when you hover the composition, the pictures that are in the composition
+  but are not being hovered over, decreaze in size:*/ }
+  .composition__photo {
+    width: 55%;
+    box-shadow: 0 1.5rem 4rem rgba(0, 0, 0, 0.4);
+    border-radius: 2px;
+    position: absolute;
+    z-index: 10;
+    outline-offset: 1.5rem; }
+    @media (max-width: 56.25em) {
+      .composition__photo {
+        float: left;
+        position: relative;
+        width: 33.33333333%;
+        box-shadow: 0 1.5rem 3rem rgba(0, 0, 0, 0.2); } }
+    .composition__photo--p1 {
+      left: 0;
+      top: -2rem; }
+      @media (max-width: 56.25em) {
+        .composition__photo--p1 {
+          top: 0;
+          transform: scale(1.2); } }
+    .composition__photo--p2 {
+      right: 0;
+      top: 2rem; }
+      @media (max-width: 56.25em) {
+        .composition__photo--p2 {
+          top: -1rem;
+          transform: scale(1.3);
+          z-index: 100; } }
+    .composition__photo--p3 {
+      left: 20%;
+      top: 10rem; }
+      @media (max-width: 56.25em) {
+        .composition__photo--p3 {
+          top: 1rem;
+          left: 0;
+          transform: scale(1.1); } }
+    .composition__photo:hover {
+      transform: scale(1.05) translate(-0.5rem);
+      box-shadow: 0 2.5rem 4rem rgba(0, 0, 0, 0.5);
+      z-index: 20;
+      transition: all .2s;
+      outline: 0.3rem solid #55c57a; }
+  .composition:hover .composition__photo:not(:hover) {
+    transform: scale(0.95); }
+
+.feature-box {
+  background-color: rgba(255, 255, 255, 0.8);
+  font-size: 1.5rem;
+  padding: 2.5rem;
+  text-align: center;
+  border-radius: 3px;
+  box-shadow: 0 1.5rem 4rem rgba(0, 0, 0, 0.2);
+  transition: transform .3s; }
+  @media (max-width: 56.25em) {
+    .feature-box {
+      padding: 2rem; } }
+  .feature-box__icon {
+    font-size: 6rem;
+    display: block;
+    margin-bottom: .5rem;
+    background-image: linear-gradient(to right, #7ed56f, #28b485);
+    -webkit-background-clip: text;
+    color: transparent; }
+    @media (max-width: 56.25em) {
+      .feature-box__icon {
+        margin-bottom: 0; } }
+  .feature-box:hover {
+    transform: translateY(-1.5rem) scale(1.03); }
+
+.form__group:not(:last-child) {
+  margin-bottom: 2rem; }
+
+.form__input {
+  font-size: 1.5rem;
+  font-family: inherit;
+  color: inherit;
+  padding: 1.5rem 2rem;
+  border-radius: 3px;
+  background-color: rgba(255, 255, 255, 0.5);
+  border: none;
+  border-bottom: 3px solid transparent;
+  width: 90%;
+  display: block;
+  transition: all .3s; }
+  @media (max-width: 56.25em) {
+    .form__input {
+      width: 100%; } }
+  .form__input:focus {
+    outline: none;
+    box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.1);
+    border-bottom: 3px solid #55c57a; }
+  .form__input:focus:invalid {
+    border-bottom: 3px solid #ff7730; }
+  .form__input::-webkit-input-placeholder {
+    color: #999; }
+
+.form__label {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-left: 2rem;
+  margin-top: .7rem;
+  display: block;
+  transition: all .3s; }
+
+.form__input:placeholder-shown + .form__label {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-4rem); }
+
+.form__radio-group {
+  width: 49%;
+  display: inline-block; }
+  @media (max-width: 56.25em) {
+    .form__radio-group {
+      width: 100%;
+      margin-bottom: 2rem; } }
+
+.form__radio-label {
+  font-size: 1.6rem;
+  cursor: pointer;
+  position: relative;
+  padding-left: 4rem; }
+
+.form__radio-button {
+  height: 3rem;
+  width: 3rem;
+  border: 5px solid #55c57a;
+  border-radius: 50%;
+  display: inline-block;
+  position: absolute;
+  left: 0;
+  top: -.4rem; }
+  .form__radio-button::after {
+    content: "";
+    display: block;
+    height: 1.3rem;
+    width: 1.3rem;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #55c57a;
+    opacity: 0;
+    transition: opacity .2s; }
+
+.form__radio-input:checked + .form__radio-label .form__radio-button::after {
+  opacity: 1; }
+
+.form__radio-input {
+  display: none; }
+
+/* we want the popup to have a black opaque background that covers the whole
+page. the content (the white window), should be fixed in the middle of that
+big black square: */
+.popup {
+  height: 100vh;
+  width: 100%;
+  z-index: 2500;
+  position: fixed;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  visibility: hidden;
+  transition: all .3s;
+  /*writing supports to make sure features show in different browser.
+    new features might not show in older browsers, therefor we need to
+    write support to make sure we also give good options for
+    these browsers.*/
+  /*because this supports for blurring doesn't work in FIREFOX,
+    we just use a dark background there: */
+  background-color: rgba(0, 0, 0, 0.8); }
+  @supports (-webkit-backdrop-filter: blur(10px)) or (backdrop-filter: blur(10px)) {
+    .popup {
+      /*adding a blur to the background when the popup shows:
+    always use caniuse.com to check what works in which browser!
+    for google chrome etc.: */
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      background-color: rgba(0, 0, 0, 0.3); } }
+  .popup__content {
+    width: 75%;
+    background-color: #ffffff;
+    box-shadow: 0 2rem 4rem rgba(0, 0, 0, 0.2);
+    border-radius: 3px;
+    overflow: hidden;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: table;
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.2);
+    transition: all .4s .2s; }
+    @media (max-width: 75em) {
+      .popup__content {
+        width: 90%; } }
+  .popup:target {
+    opacity: 1;
+    visibility: visible; }
+  .popup:target .popup__content {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1); }
+  .popup__left {
+    width: 33.3333333%;
+    display: table-cell; }
+    @media (max-width: 75em) {
+      .popup__left {
+        display: none; } }
+  .popup__right {
+    width: 66.6666667%;
+    display: table-cell;
+    vertical-align: middle;
+    padding: 3rem 5rem; }
+    @media (max-width: 75em) {
+      .popup__right {
+        width: 100%; } }
+  @media (max-width: 75em) {
+    .popup__headers {
+      text-align: center;
+      margin-bottom: 4rem; } }
+  .popup__img {
+    display: block;
+    width: 100%; }
+  .popup__text {
+    font-size: 1.4rem;
+    margin-bottom: 5rem;
+    column-count: 2;
+    column-gap: 4rem;
+    column-rule: 1px solid #eee;
+    -moz-column-count: 2;
+    -moz-column-gap: 4rem;
+    -moz-column-rule: 1px solid #eee;
+    text-align: justify; }
+    @media (max-width: 75em) {
+      .popup__text {
+        column-count: 1;
+        margin-bottom: 8rem; } }
+  @media (max-width: 75em) {
+    .popup__btn {
+      display: inline-block;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%); } }
+  .popup__close:link, .popup__close:visited {
+    color: #777;
+    position: absolute;
+    top: 2rem;
+    right: 2.5rem;
+    font-size: 3rem;
+    text-decoration: none;
+    display: inline-block;
+    line-height: 1; }
+  .popup__close:hover {
+    color: #55c57a; }
+
+.story {
+  width: 75%;
+  margin: 0 auto;
+  box-shadow: 0 3rem 6rem rgba(0, 0, 0, 0.1);
+  background-color: rgba(255, 255, 255, 0.6);
+  border-radius: 3px;
+  padding: 6rem;
+  padding-left: 9rem;
+  text-align: left;
+  font-size: 1.6rem;
+  transform: skewX(-12deg); }
+  .story:not(:last-child) {
+    margin-bottom: 6rem; }
+  @media (max-width: 56.25em) {
+    .story {
+      width: 100%;
+      padding: 4rem;
+      padding-left: 7rem; } }
+  @media (max-width: 37.5em) {
+    .story {
+      transform: skewX(0); } }
+  .story__shape {
+    width: 15rem;
+    height: 15rem;
+    float: left;
+    transform: translateX(-3rem) skewX(12deg);
+    position: relative;
+    /*because the borders of the shape show when using the blur filter
+    and transition in hover image later, add the following to fix it: */
+    overflow: hidden;
+    /*for some reason this got rid of the thin square lines around
+      the image: */
+    border-radius: 50%;
+    /*we want to clip to make a circle when clip-path is supported
+      let's write a feature query here: */ }
+    @supports (clip-path: polygon(0 0)) or (-webkit-clip-path: polygon(0 0)) {
+      .story__shape {
+        -webkit-clip-path: circle(50% at 50% 50%);
+        clip-path: circle(50% at 50% 50%);
+        -webkit-shape-outside: circle(50% at 50% 50%);
+        shape-outside: circle(50% at 50% 50%);
+        border-radius: none; } }
+    @media (max-width: 37.5em) {
+      .story__shape {
+        transform: translateX(-3rem) skewX(0); } }
+  .story__img {
+    height: 100%;
+    transform: translateX(-4rem) scale(1.4); }
+  .story__text {
+    transform: skewX(12deg); }
+    @media (max-width: 37.5em) {
+      .story__text {
+        transform: skewX(0); } }
+  .story__caption {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #ffffff;
+    text-transform: uppercase;
+    font-size: 1.7rem;
+    text-align: center;
+    opacity: 0;
+    transition: all .5s;
+    backface-visibility: hidden; }
+  .story:hover .story__caption {
+    opacity: 1;
+    transform: translate(-50%, -50%); }
+  .story:hover .story__img {
+    transform: translateX(-4rem) scale(1);
+    filter: blur(3px) brightness(80%);
+    transition: all .5s; }
+
+.footer {
+  background-color: #333;
+  color: #f7f7f7;
+  padding: 10rem 0;
+  font-size: 1.4rem; }
+  @media (max-width: 56.25em) {
+    .footer {
+      padding: 8rem 0; } }
+  .footer__logo-box {
+    text-align: center;
+    margin-bottom: 8rem; }
+    @media (max-width: 56.25em) {
+      .footer__logo-box {
+        margin-bottom: 6rem; } }
+  .footer__logo {
+    width: 15rem;
+    height: auto; }
+  .footer__navigation {
+    border-top: 1px solid #777;
+    padding-top: 2rem;
+    display: inline-block; }
+    @media (max-width: 56.25em) {
+      .footer__navigation {
+        width: 100%;
+        text-align: center; } }
+  .footer__list {
+    list-style: none; }
+  .footer__item {
+    display: inline-block; }
+    .footer__item:not(:last-child) {
+      margin-right: 1.5em; }
+      @media (max-width: 56.25em) {
+        .footer__item:not(:last-child) {
+          margin-right: .5rem; } }
+  .footer__link:link, .footer__link:visited {
+    text-decoration: none;
+    color: inherit;
+    background-color: #333;
+    text-transform: uppercase;
+    display: inline-block;
+    transition: all .2s; }
+  .footer__link:hover, .footer__link:active {
+    color: #55c57a;
+    box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.4); }
+  .footer__copyright {
+    border-top: 1px solid #777;
+    padding-top: 2rem;
+    width: 95%; }
+    @media (max-width: 56.25em) {
+      .footer__copyright {
+        width: 100%;
+        float: none; } }
+
+/* REUSABLE CSS CODE FOR WORKING WITH GRIDS!
+*/
+.row {
+  max-width: 114rem;
+  margin: 0 auto;
+  /*let's set a smaller row width for tablet and phone : */
+  /*select all of the columns using an attribute selector.
+    this attribute selector selects all of the elements that have a class
+    that starts with (= "^") "col-": */ }
+  @media (max-width: 56.25em) {
+    .row {
+      max-width: 50rem;
+      padding: 0 3rem; } }
+  .row:not(:last-child) {
+    margin-bottom: 8rem;
+    /*changes for phone and tablet: */ }
+    @media (max-width: 56.25em) {
+      .row:not(:last-child) {
+        margin-bottom: 6rem; } }
+  .row::after {
+    content: "";
+    display: table;
+    clear: both; }
+  .row [class^="col-"] {
+    float: left;
+    /*to make it responsive, we set the width of all columns to 100%, so it
+      takes up 100% of the row width.
+      the tablet and mobile web page will thus only have one single column.
+      if not, the width of the columns get really narrow and
+      the length will be spun out: */ }
+    .row [class^="col-"]:not(:last-child) {
+      margin-right: 6rem;
+      /*remove margins from columns for tablet and phone, where there is
+      only one column : */ }
+      @media (max-width: 56.25em) {
+        .row [class^="col-"]:not(:last-child) {
+          margin-right: 0;
+          margin-bottom: 6rem; } }
+    @media (max-width: 56.25em) {
+      .row [class^="col-"] {
+        width: 100% !important; } }
+  .row .col-1-of-2 {
+    width: calc((100% - 6rem) / 2); }
+  .row .col-1-of-3 {
+    width: calc( (100% - (6rem* 2)) / 3); }
+  .row .col-1-of-4 {
+    width: calc((100% - (6rem * 3)) / 4); }
+  .row .col-2-of-3 {
+    width: calc(2*( (100% - (6rem* 2) ) / 3) + 6rem); }
+  .row .col-2-of-4 {
+    width: calc(2*((100% - (6rem * 3)) / 4) + 6rem); }
+  .row .col-3-of-4 {
+    width: calc(3*((100% - (6rem * 3)) / 4) + 2* 6rem); }
+
+/* ----------------------------   HEADER  -----------------------------------*/
+.header {
+  /*we are going to use a feature query (@supports) to use clip-path for
+  the header picture, but in case a browser that doesn't support
+  clip-path is used: */
+  height: 85vh;
+  /*we are using a background image (with the person on the rock), but want
+  to apply another background layer on top of this, namely the gradually
+  changing green background one */
+  background-image: linear-gradient(to right bottom, rgba(126, 213, 111, 0.8), rgba(40, 180, 133, 0.8)), url(../img/hero-small.jpg);
+  background-size: cover;
+  /*covers the vh*/
+  background-position: top;
+  /*crops the image everywhere when you change the
+                            window size, but the top stays the same */
+  position: relative;
+  /*we want to clip header when clip-path is supported
+    let's write a feature query here: */
+  /*responsive images: because for bigger screens and higher resolutions,
+    it makes sense to use a bigger pictures.
+    media query for high resolution screen of min 600 px = 37.5em
+    (so not for phones) OR low resolution but bigger than
+    2000px (2000/16= 125em): use bigger hero picture: */
+  /*192 dots per inch is the resolution of the apple retina screen, whichs
+   is the standard high resolution screen. if you want to test if the
+   media query works, you can add a different color for the
+   min-resolution image and then change the DPR in the inspect modus.
+   this dpi thing doesn't work on safari, therefor the
+   -webkit-min-device-pixel-ratio thing*/ }
+  @supports (clip-path: polygon(0 0)) or (-webkit-clip-path: polygon(0 0)) {
+    .header {
+      /*clipping off a corner of the side*/
+      -webkit-clip-path: polygon(0 0, 100% 0, 100% 75vh, 0 100%);
+      clip-path: polygon(0 0, 100% 0, 100% 75vh, 0 100%);
+      /*for clipping images in specific forms: bennettfeely.com/clippy/ and copy
+        the code from there. */
+      height: 95vh;
+      /* = 95 % of the viewport height;
+                    leaves 5% off at the bottom*/ } }
+  @media (min-resolution: 192dpi) and (min-width: 37.5em), (-webkit-min-pixel-ratio: 2) and (min-width: 37.5em), (min-width: 125em) {
+    .header {
+      background-image: linear-gradient(to right bottom, rgba(126, 213, 111, 0.8), rgba(40, 180, 133, 0.8)), url(../img/hero.jpg); } }
+  @media (max-width: 37.5em) {
+    .header {
+      -webkit-clip-path: polygon(0 0, 100% 0, 100% 85vh, 0 100%);
+      clip-path: polygon(0 0, 100% 0, 100% 85vh, 0 100%); } }
+  .header__logo_box {
+    position: absolute;
+    top: 4rem;
+    left: 4rem; }
+  .header__logo {
+    height: 3.5rem; }
+  .header__text_box {
+    position: absolute;
+    /*we want the text to be somewhere in the middle of the page: */
+    top: 40%;
+    left: 50%;
+    /*now the text box BEGINS at 40% of the top and 50% of the left,
+      but we want the MIDDLE of it to be at 40 and 50%. to fix this,
+      we need to make some adjustments, namely: */
+    transform: translate(-50%, -50%);
+    text-align: center; }
+
+.navigation {
+  /*when we click the white button and the navigation menu appears, we want
+  the middle stripe to disappear, and for the upper and lower stripe to
+  form a cross.
+  -
+  step 1: make the middle stripe disappear:
+  'when the checkbox is checked, select it's sister (=button) and then
+  select the button's child (=icon) */ }
+  .navigation__checkbox {
+    display: none; }
+  .navigation__button {
+    background-color: #ffffff;
+    height: 7rem;
+    width: 7rem;
+    border-radius: 50%;
+    box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.1);
+    position: fixed;
+    top: 6rem;
+    right: 6rem;
+    z-index: 2000;
+    text-align: center;
+    cursor: pointer;
+    /* we want to reposition the button for tablet + phone, as to put
+      it right back into the upper right corner: */ }
+    @media (max-width: 56.25em) {
+      .navigation__button {
+        top: 4rem;
+        right: 4rem; } }
+    @media (max-width: 37.5em) {
+      .navigation__button {
+        top: 3rem;
+        right: 3rem; } }
+  .navigation__background {
+    height: 6rem;
+    width: 6rem;
+    border-radius: 50%;
+    position: fixed;
+    top: 6.5rem;
+    right: 6.5rem;
+    background-image: radial-gradient(#7ed56f, #28b485);
+    z-index: 1000;
+    transition: transform 0.8s cubic-bezier(0.86, 0, 0.07, 1);
+    /* we want to reposition the button for tablet + phone, as to put
+      it right back into the upper right corner: */ }
+    @media (max-width: 56.25em) {
+      .navigation__background {
+        top: 4.5rem;
+        right: 4.5rem; } }
+    @media (max-width: 37.5em) {
+      .navigation__background {
+        top: 3.5rem;
+        right: 3.5rem; } }
+  .navigation__nav {
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1500;
+    opacity: 0;
+    width: 0;
+    transition: all 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    visibility: hidden; }
+  .navigation__list {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    list-style: none;
+    text-align: center; }
+  .navigation__item {
+    margin: 1rem; }
+  .navigation__link:link, .navigation__link:visited {
+    display: inline-block;
+    font-size: 3rem;
+    font-weight: 300;
+    padding: 1rem 2rem;
+    color: #ffffff;
+    text-decoration: none;
+    text-transform: uppercase;
+    background-image: linear-gradient(120deg, transparent 0%, transparent 50%, #ffffff 50%);
+    /* when you make the background-size bigger, the line that seperates
+      the two background colors changes position, because the whole image
+      gets bigger, but you can't see this because of the borders
+      of the item boxes.
+      at 100%, the line is in the middle, at 220 it is somewhere out on the
+      right side of the link box, but we can't see it */
+    background-size: 230%;
+    transition: all .4s; }
+  .navigation__link:hover, .navigation__link:active {
+    /*because we make the background smaller, the line comes in and goes
+      all the way to the left: */
+    background-position: 100%;
+    color: #55c57a;
+    transform: translateX(1rem); }
+  .navigation__checkbox:checked ~ .navigation__background {
+    transform: scale(80); }
+  .navigation__checkbox:checked ~ .navigation__nav {
+    opacity: 1;
+    width: 100%;
+    transition: opacity 1.8s;
+    visibility: visible; }
+  .navigation__icon {
+    position: relative;
+    margin-top: 3.5rem;
+    /*to make the three stripes of the hamburger menu, you need the icon itself
+    (=middle stripe), a before (upper stripe) and after (lowest stripe)
+    element: */ }
+    .navigation__icon, .navigation__icon::before, .navigation__icon::after {
+      width: 3rem;
+      height: 2px;
+      background-color: #333;
+      display: inline-block; }
+    .navigation__icon::before, .navigation__icon::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      transition: all .2s; }
+    .navigation__icon::before {
+      top: -.8rem; }
+    .navigation__icon::after {
+      top: .8rem; }
+  .navigation__button:hover .navigation__icon::before {
+    top: -1rem; }
+  .navigation__button:hover .navigation__icon::after {
+    top: 1rem; }
+  .navigation__checkbox:checked + .navigation__button .navigation__icon {
+    background-color: transparent; }
+  .navigation__checkbox:checked + .navigation__button .navigation__icon::before {
+    transform: rotate(135deg);
+    top: 0; }
+  .navigation__checkbox:checked + .navigation__button .navigation__icon::after {
+    transform: rotate(-135deg);
+    top: 0; }
+
+.section-about {
+  background-color: #f7f7f7;
+  padding: 25rem 0;
+  margin-top: -20vh; }
+  @media (max-width: 56.25em) {
+    .section-about {
+      padding: 20rem 0; } }
+
+.section-features {
+  padding: 20rem 0;
+  /*we are using a background image (with mountains), but want
+  to apply another background layer on top of this, namely the gradually
+  changing green background one */
+  background-image: linear-gradient(to right bottom, rgba(126, 213, 111, 0.8), rgba(40, 180, 133, 0.8)), url(../img/nat-4.jpg);
+  background-size: cover;
+  transform: skewY(-7deg);
+  margin-top: -12rem; }
+  .section-features > * {
+    transform: skewY(7deg); }
+  @media (max-width: 56.25em) {
+    .section-features {
+      padding: 10rem 0; } }
+
+.section-tours {
+  background-color: #f7f7f7;
+  padding: 25rem 0 15rem 0;
+  margin-top: -12rem; }
+  @media (max-width: 56.25em) {
+    .section-tours {
+      padding: 20rem 0 10rem 0; } }
+
+.section-stories {
+  padding: 10rem 0;
+  position: relative; }
+  @media (max-width: 56.25em) {
+    .section-stories {
+      padding: 10rem 0; } }
+
+.section-book {
+  padding: 15rem 0;
+  background-image: linear-gradient(to right bottom, #7ed56f, #28b485); }
+  @media (max-width: 56.25em) {
+    .section-book {
+      padding: 10rem 0; } }
+
+.book {
+  background-image: linear-gradient(105deg, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.8) 49.9%, transparent 50%), url(../img/nat-10.jpg);
+  background-size: 100%;
+  border-radius: 3px;
+  box-shadow: 0 1.5rem 4rem rgba(0, 0, 0, 0.2); }
+  @media (max-width: 75em) {
+    .book {
+      background-image: linear-gradient(105deg, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.8) 49.9%, transparent 70%), url(../img/nat-10.jpg);
+      background-size: cover; } }
+  @media (max-width: 56.25em) {
+    .book {
+      background-image: linear-gradient(to right, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0.6) 100%), url(../img/nat-10.jpg);
+      background-size: cover; } }
+  .book__form {
+    width: 50%;
+    padding: 6rem; }
+    @media (max-width: 75em) {
+      .book__form {
+        width: 65%; } }
+    @media (max-width: 56.25em) {
+      .book__form {
+        width: 100%; } }
