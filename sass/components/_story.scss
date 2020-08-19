@@ -1,0 +1,119 @@
+.story {
+  width: 75%;
+  margin: 0 auto;
+  box-shadow: 0 3rem 6rem rgba($color-black, .1);
+  background-color: rgba($color-white, .60);
+
+  &:not(:last-child){
+      margin-bottom: 6rem;
+  }
+
+  border-radius: $border-radius;
+  padding: 6rem;
+  padding-left: 9rem;
+  text-align: left;
+  font-size: $default-font-size;
+  //skewing the section:
+  transform: skewX(-12deg);
+
+  //making the stories a little bit wider on the tablet:
+  @include respond(tab-port) {
+    width: 100%;
+    padding: 4rem;
+    padding-left: 7rem;
+  }
+
+  //on phone size, we don't want the stories to be skewed:
+  @include respond(phone) {
+    transform: skewX(0);
+  }
+
+  &__shape{
+    width: 15rem;
+    height: 15rem;
+    float: left;
+
+    //creating some space in between the circle and the text and de-skewing:
+    transform: translateX(-3rem) skewX(12deg);
+    position: relative;
+    /*because the borders of the shape show when using the blur filter
+    and transition in hover image later, add the following to fix it: */
+    overflow: hidden;
+    /*for some reason this got rid of the thin square lines around
+      the image: */
+    border-radius: 50%;
+
+
+
+    /*we want to clip to make a circle when clip-path is supported
+      let's write a feature query here: */
+    @supports (clip-path: polygon(0 0)) or (-webkit-clip-path: polygon(0 0)) {
+      //making the actual circle element:
+      -webkit-clip-path: circle(50% at 50% 50%);
+      clip-path: circle(50% at 50% 50%);
+      //making it so that the contect (text) flows around the element :
+      //for element circle with radius 50 % of 15rem (=7.5rem) and exact center 50%:
+      -webkit-shape-outside: circle(50% at 50% 50%);
+      shape-outside: circle(50% at 50% 50%);
+      //this only works when the element is floated & has height and width!
+      border-radius: none;
+    }
+
+
+
+
+    //on phone size, we keep the space between picture and text,
+    // but get rid of the skewing:
+    @include respond(phone) {
+      transform: translateX(-3rem) skewX(0);
+    }
+
+  }
+
+  &__img {
+    height: 100%;
+    //get the girl in the middle of the picture:
+    transform: translateX(-4rem) scale(1.4);
+  }
+
+  //de-skewing the text:
+  &__text {
+    transform: skewX(12deg);
+
+    //no skewed text in the stories on phone size:
+    @include respond(phone) {
+      transform: skewX(0);
+    }
+  }
+
+  &__caption {
+    //should bein the exact middle of the picture:
+    @include absolute_center;
+
+    color: $color-white;
+    text-transform: uppercase;
+    font-size: 1.7rem;
+    text-align: center;
+    //we want the caption to be invisable in the initial state:
+    opacity: 0;
+
+    transition: all .5s;
+    //to fix any glitches that cause shaking:
+    backface-visibility: hidden;
+
+  }
+
+  //we want the caption to appear when we hover the story:
+  &:hover &__caption {
+    opacity: 1;
+    //bring it to the middle of the picture:
+    transform: translate(-50%, -50%);
+  }
+
+  //make the picture blurry and zoomed out when the story is hovered:
+  &:hover &__img {
+    transform:  translateX(-4rem) scale(1);
+    filter: blur(3px) brightness(80%);
+    transition: all .5s;
+  }
+}

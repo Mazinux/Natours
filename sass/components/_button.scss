@@ -1,0 +1,129 @@
+/* making the DISCOVER OUT TOURS button using pseudo elements
+    and pseudo classes:
+    pseudo classes are special states of a selector. in this example
+    the link is the state of the btn selector. we use these classes
+    to style element under a certain condition.*/
+
+.btn {
+  /*o apply styles to ALL buttons, so not just the ones that were written
+  in html with an anker element (defined in here with link and visited),
+  we just add "&" in here, meaning: aplly to all buttons: */
+  &,
+  &:link,
+  &:visited{
+    text-transform: uppercase;
+    text-decoration: none;
+    font-size: 2rem;
+    padding: 1.5rem 4rem;
+    display: inline-block;
+    /*rounded corners for button*/
+    border-radius: $border-radius-btn;
+
+    transition: all .2s;
+    position: relative;
+
+    //change for the <button> element in the form:
+    border: none;
+    cursor: pointer;
+  }
+
+  /*we want the button to move up just a little when being hovered over*/
+  &:hover {
+      transform: translateY(-0.3rem);
+      box-shadow: 0 2rem 3rem rgba($color-black, .2);
+                  /*this means: no shadow on x-axis
+                                10px shadow on y-axis
+                                10px blur
+                                color: black, with only .2 opacity */
+      /*now let's make it so the ::after is applied when hovered over btn: */
+      &::after{
+          transform: scaleX(1.4) scaleY(1.6); /*enlarges the after btn */
+          opacity: 0;
+      }
+  }
+
+  /*and we want the button to look as if you push down on it a little when
+    you click it: */
+  &:focus,
+  &:active {
+    //get rid on blue border around the element when clicked (:focus):
+    outline: none;
+
+    transform: translateY(.3rem);
+    box-shadow: 0 1rem 2rem rgba($color-black, .2)
+  }
+
+  /*specific styling of only the white button (the btn class we
+    are using for other buttons as well)*/
+  &--white {
+    background-color: $color-white;
+    color: $color-grey-dark;
+
+    &::after{
+      background-color: $color-white;
+    }
+  }
+
+  /* GREEN BUTTON*/
+  &--green {
+    background-color: $color-primary;
+    color: $color-white;
+
+    &::after{
+      background-color: $color-primary;
+    }
+  }
+
+
+
+  /*creating a button that looks exactly like the button we already have,
+    but it's behind the button. it expands and then disappears behind the
+    first button again.*/
+  &::after{
+    content: "";
+    display:inline-block;
+    height: 100%; /*(=100% of the first button)*/
+    width: 100%;
+    border-radius: $border-radius-btn;
+
+    /*to put it in place and behind the fist button: */
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1; /*so behind the other one*/
+    transition: all .4s;
+  }
+
+  /*'discover our tours'-btn animation:*/
+  &--animated{
+    animation: move_in_bottom .5s ease-out;
+    animation-delay: .75s;
+    animation-fill-mode: backwards; /*to make the 0% animations start
+                                      BEFORE the actual animation starts*/
+  }
+}
+
+// styling the LEARN MORE button in the ABOUT section:
+.btn-text {
+  &:link,
+  &:visited{
+    font-size: $default-font-size;
+    color: $color-primary;
+    display: inline-block;
+    text-decoration: none;
+    border-bottom: .1rem solid $color-primary;
+    padding: .3rem;
+  }
+
+  &:hover{
+    background-color: $color-primary;
+    color: $color-white;
+    transform: translateY(-.3rem);
+    box-shadow: 0 1rem 2rem rgba($color-black, .2);
+  }
+
+  &:active{
+    transform: translateY(0rem);
+    box-shadow: 0 .1rem 1rem rgba($color-black, .15);
+  }
+}

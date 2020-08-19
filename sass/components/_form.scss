@@ -1,0 +1,127 @@
+.form {
+  &__group:not(:last-child) {
+    margin-bottom: 2rem;
+  }
+
+
+  &__input {
+    font-size: 1.5rem;
+    font-family: inherit;
+    color: inherit;
+    padding: 1.5rem 2rem;
+    border-radius: $border-radius;
+    background-color: rgba($color-white, .5);
+    border: none;
+    border-bottom: 3px solid transparent;
+
+    width: 90%;
+    display: block;
+
+    transition: all .3s;
+
+    @include respond(tab-port) {
+      width: 100%;
+    }
+
+    //green line + shadow underneath input box when clicked;
+    &:focus {
+      outline: none;
+      box-shadow: 0 1rem 2rem rgba($color-black, .1);
+      border-bottom: 3px solid $color-primary;
+    }
+
+    //when the input text is not valid, apply red border:
+    &:focus:invalid {
+      border-bottom: 3px solid $color-secondary-dark;
+    }
+
+    //styling the text in the input box:
+    &::-webkit-input-placeholder {
+      color: $color-grey-dark-2;
+    }
+  }
+
+  &__label {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-left: 2rem;
+    margin-top: .7rem;
+    display: block;
+    transition: all .3s;
+  }
+
+  //when the placeholder (= 'full name' + 'email address' INSIDE of the boxes
+  // ) is shown (so when you haven't typed yet, the placeholder is shown
+  //inside of the boxes), apply these styles:
+  &__input:placeholder-shown + &__label {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-4rem);
+  }
+
+  &__radio-group {
+    width: 49%;
+    display: inline-block;
+
+    @include respond(tab-port) {
+      width: 100%;
+      margin-bottom: 2rem;
+    }
+  }
+
+  &__radio-label {
+    font-size: $default-font-size;
+    cursor: pointer;
+
+    position: relative;
+
+    //make sure the label text doesn't start inside of the circle btn:
+    padding-left: 4rem;
+  }
+
+  &__radio-button {
+    //make a green circle:
+    height: 3rem;
+    width: 3rem;
+    border: 5px solid $color-primary;
+    border-radius: 50%; //to make it round
+    display: inline-block;
+
+    position: absolute;
+    left: 0;
+    top: -.4rem;
+
+    // making the inner green circle:
+    &::after {
+      content: "";
+      display: block;
+      height: 1.3rem;
+      width: 1.3rem;
+      border-radius: 50%;
+
+      //positioning it right in the middle of the outer circle:
+      @include absolute_center;
+
+      background-color: $color-primary;
+
+      //hiding them, because we only want one of the inner circles to appear
+      //when we click one of the options, and the other one to remain hidden:
+      opacity: 0;
+
+      transition: opacity .2s;
+    }
+  }
+
+  //making the inner circle appear when the radio button is clicked:
+  //we need to select the radio-input's sister: + radio-label, and then
+  // select the radio-label's child, called radio-button:
+  &__radio-input:checked + &__radio-label  &__radio-button::after {
+    opacity: 1;
+  }
+
+  //now, hide the radio input:
+  &__radio-input {
+    display: none;
+  }
+
+}

@@ -1,0 +1,171 @@
+/* we want the popup to have a black opaque background that covers the whole
+page. the content (the white window), should be fixed in the middle of that
+big black square: */
+.popup {
+  height: 100vh;
+  width: 100%;
+
+  z-index: 2500;
+
+  position: fixed; //because we don't want it to move when we scroll
+  top: 0;
+  left: 0;
+
+  opacity: 0;
+  visibility: hidden;
+
+  transition: all .3s;
+
+  //GRACEFUL DEGRADATION
+  /*writing supports to make sure features show in different browser.
+    new features might not show in older browsers, therefor we need to
+    write support to make sure we also give good options for
+    these browsers.*/
+
+  //if one of those two is supported, apply these three:
+  @supports (-webkit-backdrop-filter: blur(10px)) or
+            (backdrop-filter: blur(10px)) {
+    /*adding a blur to the background when the popup shows:
+    always use caniuse.com to check what works in which browser!
+    for google chrome etc.: */
+    backdrop-filter: blur(10px);
+    //for safari:
+    -webkit-backdrop-filter: blur(10px);
+    //slightly darker background when popup shows:
+    background-color: rgba($color-black, .3);
+  }
+  /*because this supports for blurring doesn't work in FIREFOX,
+    we just use a dark background there: */
+    background-color: rgba($color-black, .8);
+
+  &__content {
+    //we don't set a hight here!
+    width: 75%;
+    background-color: $color-white;
+    box-shadow: 0 2rem 4rem rgba($color-black, .2);
+    border-radius: 3px;
+    overflow: hidden;
+
+    //fix it into the very center:
+    @include absolute_center;
+
+    //to get the left and right side into the right position,
+    //make the content into a table:
+    display: table;
+
+    //initial state:
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(.2);
+    transition: all .4s .2s;
+
+    @include respond(tab-land) {
+      width: 90%;
+    }
+
+  }
+
+  //making the popup visible when book button on card is clicked:
+  &:target {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  //when __content is targetted, we want it to become bigger + towards us:
+  &:target &__content {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+
+  &__left {
+    width: 33.3333333%; //alternatively, you could also use grids to do this!
+    //make it into a table-cell:
+    display: table-cell;
+
+    @include respond(tab-land) {
+      display: none;
+    }
+  }
+
+  &__right {
+    width: 66.6666667%;
+    //make it into a table-cell:
+    display: table-cell;
+    //get it into the middle:
+    vertical-align: middle;
+
+    padding: 3rem 5rem;
+
+    @include respond(tab-land) {
+      width: 100%;
+      //text-align: center;
+
+    }
+  }
+
+  &__headers {
+    @include respond(tab-land) {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+  }
+
+  &__img {
+    display: block;
+    width: 100%;
+  }
+
+  &__text {
+    font-size: 1.4rem;
+    margin-bottom: 5rem;
+
+    //column lay-out:
+    column-count: 2;
+    column-gap: 4rem;
+    column-rule: 1px solid $color-grey-light-2;
+
+    -moz-column-count: 2;
+    -moz-column-gap: 4rem;
+    -moz-column-rule: 1px solid $color-grey-light-2;
+
+    text-align: justify;
+    //-webkithyphens:auto;
+    //hyphens: auto;  --not working, for some reason, because of latin?
+
+    @include respond(tab-land) {
+      column-count: 1;
+      margin-bottom: 8rem;
+    }
+
+  }
+
+  &__btn {
+    @include respond(tab-land) {
+      display: inline-block;
+      @include absolute_center;
+
+    }
+
+  }
+
+
+
+  //closing btn:
+  &__close {
+    &:link,
+    &:visited {
+      color: $color-grey-dark;
+      position: absolute;
+      top: 2rem;
+      right: 2.5rem;
+      font-size: 3rem;
+      text-decoration: none;
+      display: inline-block;
+      line-height: 1;
+    }
+
+    &:hover {
+      color: $color-primary;
+    }
+  }
+}

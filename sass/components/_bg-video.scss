@@ -1,0 +1,20 @@
+.bg-video {
+  position: absolute; //set parent element to position:relative; this is
+                      //.section-stories in _home.scss
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: -1;
+  opacity: .25;
+
+  &__content {
+    height: 100%;
+    width: 100%;
+    /*sadly, specifying height and width alone doesn't fix the problem,
+      and the video still doesn't cover the whole area. therefor we need
+      to use object-fit:  */
+    object-fit: cover; //this is like fitting a background image! it fills the
+                      //entire element while remaining the aspect ratio.
+  }
+}

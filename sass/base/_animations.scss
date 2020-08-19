@@ -1,0 +1,60 @@
+
+
+/*----------- CSS ANIMATIONS ------------------------------------------*/
+
+/*Main text (= 'OUTDOORS') coming in from left to the right*/
+@keyframes move_in_left {
+  0% {
+    opacity: 0;
+    /* we want to make the text come in from left to right, so it needs to
+        kind of slide over the X axis: */
+    transform: translateX(-10rem); /*negative value means it comes
+                                    from the left*/
+  }
+  /*make it go a bit too far to the right, so it looks like it bounces back:*/
+  80%{
+    transform: translateX(1rem);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate(0); /*this is the position at which the text should
+                            be at when the animation ends. Thus the position
+                            which we coded for '.text_box' */
+  }
+}
+
+/* sub text (='is where life happens') coming in from below*/
+@keyframes move_in_right {
+  0%{
+    opacity: 0;
+    transform: translateX(10rem);
+  }
+
+  80% {
+    transform: translateX(-1rem);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/*moving in the btn from the bottom up: */
+
+@keyframes move_in_bottom {
+  0% {
+    opacity: 0;
+    transform: translateY(20rem);
+  }
+
+  80% {
+
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

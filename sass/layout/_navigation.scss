@@ -1,0 +1,224 @@
+.navigation {
+
+  &__checkbox {
+    //we don't want the checkbox to show without clicking the menu button:
+    display:none;
+  }
+
+  //menu button
+  &__button {
+    background-color: $color-white;
+    height: 7rem;
+    width: 7rem;
+    border-radius: 50%;
+    box-shadow: 0 1rem 3rem rgba($color-black, .1);
+    //make sure it is nicely positioned in the right corner and fixed there:
+    position: fixed;
+    top: 6rem;
+    right: 6rem;
+    //to make sure it is always on top of other elements, use high z-index:
+    z-index: 2000;
+    //to bring the hambuger (styled below in &__icon) into the center:
+    text-align: center;
+
+    cursor: pointer;
+
+    /* we want to reposition the button for tablet + phone, as to put
+      it right back into the upper right corner: */
+    @include respond(tab-port) {
+      top: 4rem;
+      right: 4rem;
+    }
+    //still looks bad on the phone, so let's readjust:
+    @include respond(phone) {
+      top: 3rem;
+      right: 3rem;
+    }
+  }
+
+  &__background {
+    //nackground is actually a circle expanding from the menu button
+    height: 6rem;
+    width: 6rem;
+    border-radius: 50%;
+    //make sure it is nicely positioned in the corner and fixed there
+    // + its middle position equals the middle position of the menu button:
+    position: fixed;
+    top: 6.5rem;
+    right: 6.5rem;
+    //background with radial gradient:
+    background-image: radial-gradient($color-primary-light, $color-primary-dark);
+    //to make sure it is always on top of other elements, use high z-index, but
+    // not as high as the one of the menu button:
+    z-index: 1000;
+
+    transition: transform .8s cubic-bezier(0.86, 0, 0.07, 1);
+
+    /* we want to reposition the button for tablet + phone, as to put
+      it right back into the upper right corner: */
+    @include respond(tab-port) {
+      top: 4.5rem;
+      right: 4.5rem;
+    }
+
+    //still looks bad on the phone, so let's readjust:
+    @include respond(phone) {
+      top: 3.5rem;
+      right: 3.5rem;
+    }
+
+  }
+
+  &__nav {
+    //we want the nav menu to take the whole page:
+    height: 100vh;
+    position: fixed;
+    // it start from the right corner. it then expands to 100vh and 100% width;
+    top: 0;
+    left: 0;
+    //it should be on top of the background, but not on top of the menu button:
+    z-index: 1500;
+    //we don't want the nav menu to show when the menu btn hasn't been clicked:
+    opacity: 0; //with this alone, they are just opaque, so our cursor still
+                //shows us that they are there. need to change width to 0 :
+    width: 0;
+
+    transition: all .8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+    //to make the links in the left side completely hidden:
+    visibility: hidden;
+  }
+
+  &__list {
+    //we want to center it in the __nav:
+      @include absolute_center;
+
+    list-style: none;
+    text-align: center;
+  }
+
+  &__item {
+    margin: 1rem;
+  }
+
+  &__link {
+    // normale state:
+    &:link,
+    &:visited {
+      display: inline-block;
+      font-size: 3rem;
+      font-weight: 300;
+      padding: 1rem 2rem;
+
+      color: $color-white;
+      text-decoration: none;
+      text-transform: uppercase;
+      //white background:
+      background-image: linear-gradient(120deg,
+                                        transparent 0%,
+                                        transparent 50%,
+                                        $color-white 50%);
+      /* when you make the background-size bigger, the line that seperates
+      the two background colors changes position, because the whole image
+      gets bigger, but you can't see this because of the borders
+      of the item boxes.
+      at 100%, the line is in the middle, at 220 it is somewhere out on the
+      right side of the link box, but we can't see it */
+      background-size: 230%;
+
+      transition: all .4s;
+    }
+
+    //when hovered and clicked:
+    &:hover,
+    &:active {
+      /*because we make the background smaller, the line comes in and goes
+      all the way to the left: */
+      background-position: 100%;
+      //make the text green:
+      color: $color-primary;
+
+      transform: translateX(1rem);
+    }
+  }
+
+  // FUNCTIONALITY
+  // make the full page green background appear when menu btn is clicked:
+  &__checkbox:checked ~ &__background {
+    //by making the circle very big, we can cover the entire page:
+    transform: scale(80);
+  }
+  //we also want the full page nav menu to appear:
+  &__checkbox:checked ~ &__nav {
+    opacity: 1;
+    width: 100%;
+    transition: opacity 1.8s;
+    //make the links visible:
+    visibility: visible;
+  }
+
+  // HAMBURGER ICON
+  &__icon {
+    position: relative;
+    //moving it down for it to be in the white round button:
+    margin-top: 3.5rem;
+    /*to make the three stripes of the hamburger menu, you need the icon itself
+    (=middle stripe), a before (upper stripe) and after (lowest stripe)
+    element: */
+    &,
+    &::before,
+    &::after {
+      width: 3rem;
+      height: 2px; //we use px because we don't want this to change
+      background-color: $color-grey-dark-3;
+      display: inline-block;
+
+    }
+    // in order for these stripes to appear, we need to set a content:
+    &::before,
+    &::after {
+      content: "";
+      //position:
+      position: absolute;
+      left: 0;
+
+      transition: all .2s;
+    }
+
+    //we want different positions for the upper one and the lower one:
+    &::before { top: -.8rem;}
+    &::after { top: .8rem;}
+  }
+
+  //when the btn is hovered, we want some more space in between the stripes:
+  &__button:hover &__icon::before {
+    top: -1rem;
+  }
+  &__button:hover &__icon::after {
+    top: 1rem;
+  }
+
+  /*when we click the white button and the navigation menu appears, we want
+  the middle stripe to disappear, and for the upper and lower stripe to
+  form a cross.
+  -
+  step 1: make the middle stripe disappear:
+  'when the checkbox is checked, select it's sister (=button) and then
+  select the button's child (=icon) */
+  &__checkbox:checked + &__button &__icon {
+    background-color: transparent;
+  }
+  // step 2: making the cross:
+  // a. change the angle of the upper stripe:
+  &__checkbox:checked + &__button &__icon::before {
+    transform: rotate(135deg);
+    //move it back to zero so it's in the middle:
+    top: 0;
+  }
+  // b. change the angle of the lower stripe:
+  &__checkbox:checked + &__button &__icon::after {
+    transform: rotate(-135deg);
+    //move it back to zero so it's in the middle:
+    top: 0;
+  }
+}

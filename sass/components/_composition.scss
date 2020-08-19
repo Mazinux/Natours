@@ -1,0 +1,81 @@
+// PICTURE COMPOSITION in the ABOUT section
+.composition {
+  position: relative;
+
+  &__photo {
+    width: 55%; //use of % to make it resposive
+    //nice shadow around each picture:
+    box-shadow: 0 1.5rem 4rem rgba($color-black, .4);
+    border-radius: 2px;
+    //making the photo grid with overlapping pics:
+    position: absolute;
+    z-index: 10;
+    outline-offset: 1.5rem;
+
+    @include respond(tab-port) {
+      float: left;
+      position: relative;
+      width: 33.33333333%;
+      box-shadow: 0 1.5rem 3rem rgba($color-black, .2);
+    }
+
+    &--p1 {
+      left: 0;
+      top: -2rem;
+
+      @include respond(tab-port) {
+        top: 0;
+        transform: scale(1.2);
+      }
+
+    }
+
+
+    &--p2 {
+      right: 0;
+      top: 2rem;
+
+      @include respond(tab-port) {
+        top: -1rem;
+        //scaling the pic up a bit:
+        transform: scale(1.3);
+        //put the middle picture on top of the grid:
+        z-index: 100;
+      }
+
+    }
+
+    &--p3 {
+      left: 20%;
+      top: 10rem;
+
+      @include respond(tab-port) {
+        top: 1rem;
+        left: 0;
+        transform: scale(1.1);
+      }
+
+    }
+
+
+    &:hover{
+      //zoom in on picture + move up just a tiny bit:
+      transform: scale(1.05) translate(-.5rem);
+      //increase shadow:
+      box-shadow: 0 2.5rem 4rem rgba($color-black, .5);
+      //bring picture to front. we choose random 10 for z-index higher up,
+      //so now we have to just increase that number:
+      z-index: 20;
+      //to make it a smooth transition:
+      transition: all .2s;
+      //green line around picture:
+      outline: .3rem solid $color-primary;
+    }
+  }
+  /*to shrink the pictures that are not being hovered over.
+  when you hover the composition, the pictures that are in the composition
+  but are not being hovered over, decreaze in size:*/
+  &:hover &__photo:not(:hover){
+    transform: scale(.95);
+  }
+}
