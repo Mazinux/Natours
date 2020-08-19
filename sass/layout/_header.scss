@@ -37,9 +37,9 @@
     media query for high resolution screen of min 600 px = 37.5em
     (so not for phones) OR low resolution but bigger than
     2000px (2000/16= 125em): use bigger hero picture: */
-  @media (min-resolution: 192dpi) and (min-width: 37.5em),
-          (-webkit-min-pixel-ratio: 2) and (min-width: 37.5em),
-          (min-width: 125em) {
+  @media only screen and (min-resolution: 192dpi) and (min-width: 37.5em),
+          only screen and (-webkit-min-pixel-ratio: 2) and (min-width: 37.5em),
+          only screen and (min-width: 125em) {
     background-image: linear-gradient(to right bottom,
                                       rgba($color-primary-light, 0.8),
                                       rgba($color-primary-dark, 0.8)),
